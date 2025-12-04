@@ -45,7 +45,7 @@ if (isset($_POST['update'])) {
 <body>
     <?php require_once "../../include/navbar.php" ?>
     <div class="container">
-    <h2 style="text-align: center;">Edit ata Kendaraan</h2>
+    <h2 style="text-align: center;">Edit Data Kendaraan</h2>
     </div>
     <div class="container-fluid" style="display: flex; justify-content:center;">
         <div class="card">
