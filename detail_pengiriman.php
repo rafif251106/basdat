@@ -63,6 +63,7 @@ if (isset($_POST['kembali'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/table.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/navbar.css">
@@ -70,11 +71,13 @@ if (isset($_POST['kembali'])) {
 
 <body>
     <?php require_once "./include/navbar.php" ?>
-    <h2 style="text-align: center;">Tambah Data Pengiriman</h2>
+    <div class="container">
+        <h2 style="text-align: center;">Tambah Data Pengiriman</h2>
+    </div>
     <form action="./detail_pengiriman.php" method="post">
         <button type="submit" name="kembali" class="btn btn-danger ms-5">Kembali</button>
     </form>
-    <div class="container-fluid" style="display: flex; justify-content:center;">
+    <div class="container" style="display: flex; justify-content:center;">
         <form action="edit.php?id=<?= $id ?>" method="post" style="padding:10px">
             <table style="width: 1000px;">
                 <tr>

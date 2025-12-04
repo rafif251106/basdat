@@ -13,11 +13,11 @@ if (isset($_POST['tambah'])) {
     $password = $_POST['password'] ?? "";
     $nama = $_POST['nama'] ?? "";
     $level = $_POST['level'] ?? "";
-    
+
     $query = "INSERT INTO users(username,`password`,nama,`level`) VALUES 
     (?,MD5(?),?,?)";
     $prepare = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($prepare, "ssss", $username, $password, $nama,$level);
+    mysqli_stmt_bind_param($prepare, "ssss", $username, $password, $nama, $level);
     if (mysqli_stmt_execute($prepare)) {
         header("location:../../users.php");
     } else {
@@ -34,6 +34,7 @@ if (isset($_POST['tambah'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../css/table.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../css/navbar.css">
@@ -41,7 +42,9 @@ if (isset($_POST['tambah'])) {
 
 <body>
     <?php require_once "../../include/navbar.php" ?>
-    <h2 style="text-align: center;">Tambah Data Users</h2>
+    <div class="container">
+        <h2 style="text-align: center;">Tambah Data Users</h2>
+    </div>
     <div class="container-fluid" style="display: flex; justify-content:center;">
         <div class="card">
             <div class="card-body">
