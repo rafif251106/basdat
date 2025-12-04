@@ -1,0 +1,26 @@
+.navbar {
+    background-color: rgb(8, 113, 185);
+}
+
+.home{
+    border-radius: 10px;
+}
+.home:hover{
+    background-color: black;
+    border-radius: 10px;
+}
+
+.laporan{
+    border-radius: 10px;
+}
+.laporan:hover{
+    background-color: black;
+    border-radius: 10px;
+}
+.pengiriman{
+    border-radius: 10px;
+}
+.pengiriman:hover{
+    background-color: black;
+    border-radius: 10px;
+}
