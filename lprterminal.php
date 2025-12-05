@@ -134,7 +134,7 @@ if (isset($_POST['kembali'])) {
         <div class="container-fluid" style="display: flex; justify-content:center;">
             <div class="card p-3">
                 <div class="card-body">
-                    <form action="laporan.php" method="post" style="padding:10px;width: 600px;">
+                    <form action="lprterminal.php" method="post" style="padding:10px;width: 600px;">
                         <table>
                             <tr>
                                 <td>

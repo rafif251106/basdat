@@ -11,6 +11,10 @@ if (isset($_POST['cari'])) {
     $result = mysqli_query($conn, $query);
     $terminalc = mysqli_fetch_assoc($result);
 }
+
+if (isset($_POST['kembali'])) {
+    header("location:./terminal.php");
+}
 ?>
 
 <head>
@@ -25,12 +29,15 @@ if (isset($_POST['cari'])) {
     <?php
     require_once __DIR__ . "/include/navbar.php";
     ?>
+    <form action="./searchterminal.php" method="post">
+        <button type="submit" name="kembali" class="btn btn-danger ms-5 mt-3">Kembali</button>
+    </form>
     <div class="container">
         <h2>Search Terminal</h2>
         <form method="POST" action="searchterminal.php">
             <div class="mb-3">
                 <label for="search" class="form-label">Cari terminal</label>
-                <input type="text" list="terminal-list" class="form-control" id="search" name="search" placeholder="Masukkan nama terminal">
+                <input type="text" list="terminal-list" class="form-control" id="search" name="search" placeholder="Masukkan nama terminal" autocomplete="off">
                 <datalist id="terminal-list">
                     <?php foreach ($terminal as $t): ?>
                         <option value="<?php echo $t['nama_terminal']; ?>">
@@ -41,28 +48,28 @@ if (isset($_POST['cari'])) {
         </form>
     </div>
     <?php if (isset($_POST['cari'])): ?>
-    <div class="container">
-        <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
-            <tr class="table-dark">
-                <th>ID Terminal</th>
-                <th>Nama Terminal</th>
-                <th>Lokasi Terminal</th>
-                <th>Kapasitas_Penyimpanan</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach ([$terminalc] as $t): ?>
-                <tr>
-                    <td><?php echo $t['id_terminal'] ?></td>
-                    <td><?php echo $t['nama_terminal'] ?></td>
-                    <td><?php echo $t['lokasi_terminal'] ?></td>
-                    <td><?php echo $t['kapasitas_penyimpanan'] ?></td>
-                    <td>
-                        <a href="./crud/terminal/delterminal.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                        <a href="./crud/terminal/edterminal.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
-                    </td>
+        <div class="container">
+            <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
+                <tr class="table-dark">
+                    <th>ID Terminal</th>
+                    <th>Nama Terminal</th>
+                    <th>Lokasi Terminal</th>
+                    <th>Kapasitas_Penyimpanan</th>
+                    <th>Action</th>
                 </tr>
-            <?php endforeach ?>
-        </table>
-    </div>
+                <?php foreach ([$terminalc] as $t): ?>
+                    <tr>
+                        <td><?php echo $t['id_terminal'] ?></td>
+                        <td><?php echo $t['nama_terminal'] ?></td>
+                        <td><?php echo $t['lokasi_terminal'] ?></td>
+                        <td><?php echo $t['kapasitas_penyimpanan'] ?></td>
+                        <td>
+                            <a href="./crud/terminal/delterminal.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                            <a href="./crud/terminal/edterminal.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+            </table>
+        </div>
     <?php endif; ?>
 </body>

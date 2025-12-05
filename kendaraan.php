@@ -8,8 +8,26 @@ $result = mysqli_query($conn, $query);
 $kendaraan = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $status = $_POST['status'] ?? "";
+$kapasitas_tangki = $_POST['kapasitas_tangki'] ?? "";
 if (isset($_POST['filter']) && !empty($status)) {
     $query = "SELECT * FROM kendaraan WHERE status_kendaraan = '$status'";
+    $result = mysqli_query($conn, $query);
+    $kendaraan = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+if (isset($_POST['filter']) && !empty($kapasitas_tangki)) {
+    if (!empty($status)){
+        if ($kapasitas_tangki == '>20000') {
+            $query = "SELECT * FROM kendaraan WHERE status_kendaraan = '$status' AND kapasitas_tangki > 20000";
+        } elseif ($kapasitas_tangki == '<20000') {
+            $query = "SELECT * FROM kendaraan WHERE status_kendaraan = '$status' AND kapasitas_tangki < 20000";
+        }
+    }else{
+        if ($kapasitas_tangki == '>20000') {
+            $query = "SELECT * FROM kendaraan WHERE kapasitas_tangki > 20000";
+        } elseif ($kapasitas_tangki == '<20000') {
+            $query = "SELECT * FROM kendaraan WHERE kapasitas_tangki < 20000";
+        }
+    }
     $result = mysqli_query($conn, $query);
     $kendaraan = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
@@ -44,6 +62,14 @@ if (isset($_POST['filter']) && !empty($status)) {
                     <option value="rusak" <?= $status == 'rusak' ? 'selected' : '' ?>>Rusak</option>
                     <option value="maintenance" <?= $status == 'maintenance' ? 'selected' : '' ?>>Maintenance</option>
                 </select>
+            </div>
+            <label for="kapasitas_tangki" class="form-label">Kapasitas Tangki:</label>
+            <div class="mb-3 d-flex align-items-center gap-2">
+                <select name="kapasitas_tangki" id="kapasitas_tangki" class="form-control" style="width: 300px;">
+                    <option value="" <?= $kapasitas_tangki == '' ? 'selected' : '' ?>>Pilih Kapasitas Tangki</option>
+                    <option value=">20000" <?= $kapasitas_tangki == '>20000' ? 'selected' : '' ?>> > 20000</option>
+                    <option value="<20000" <?= $kapasitas_tangki == '<20000' ? 'selected' : '' ?>> < 20000 </option>
+                </select>
                 <button type="submit" class="btn btn-primary" name="filter">Filter</button>
                 <a href="kendaraan.php" class="btn btn-secondary">Reset</a>
             </div>
@@ -72,6 +98,9 @@ if (isset($_POST['filter']) && !empty($status)) {
         </table>
     </div>
     <?php if (isset($_POST['filter'])): ?>
+        <?php if(empty($kendaraan)): ?>
+            <h2 style="color: white;">Tidak Ada Data</h2>
+        <?php else: ?>
         <div class="container">
             <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
                 <tr class="table-dark">
@@ -95,6 +124,7 @@ if (isset($_POST['filter']) && !empty($status)) {
                 <?php endforeach ?>
             </table>
         </div>
+        <?php endif; ?>
     <?php endif; ?>
 </body>
 
