@@ -6,6 +6,13 @@ $conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
 $query = "SELECT * FROM terminal";
 $result = mysqli_query($conn, $query);
 $terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$nama = $_POST['nama_terminal'] ?? "";
+if (isset($_POST['cari']) && !empty($nama)) {
+    $query = "SELECT * FROM terminal WHERE nama_terminal = '$nama'";
+    $result = mysqli_query($conn, $query);
+    $terminalc = mysqli_fetch_assoc($result);
+}
 ?>
 
 <head>
@@ -13,7 +20,13 @@ $terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/navbar.css">
-
+    <style>
+        <?php if (isset($_POST['cari']) && !empty($nama)): ?>
+        .terminal {
+            display: none;
+        }
+        <?php endif; ?>
+    </style>
 </head>
 
 <body>
@@ -22,9 +35,18 @@ $terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
     ?>
     <div class="container">
         <h2>Terminal</h2>
+        <form action="terminal.php" method="post">
+            <input type="search" name="nama_terminal" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama terminal" autocomplete="off" list="terminal">
+            <datalist id="terminal">
+                <?php foreach ($terminal as $t): ?>
+                    <option value="<?php echo $t['nama_terminal']; ?>">
+                <?php endforeach; ?>
+            </datalist>
+            <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
+            <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:terminal.php") ?>">Reset</button>
+        </form>
         <a href="./crud/terminal/tdterminal.php" class="btn btn-primary">Tambah Data</a>
-        <a href="./searchterminal.php" class="btn btn-primary">Search Terminal</a>
-        <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
+        <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary terminal">
             <tr class="table-dark">
                 <th>ID Terminal</th>
                 <th>Nama Terminal</th>
@@ -45,6 +67,27 @@ $terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 </tr>
             <?php endforeach ?>
         </table>
+        <?php if (isset($_POST['cari']) && !empty($nama)): ?>
+        <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
+            <tr class="table-dark">
+                <th>ID Terminal</th>
+                <th>Nama Terminal</th>
+                <th>Lokasi Terminal</th>
+                <th>Kapasitas_Penyimpanan</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td><?php echo $terminalc['id_terminal'] ?></td>
+                <td><?php echo $terminalc['nama_terminal'] ?></td>
+                <td><?php echo $terminalc['lokasi_terminal'] ?></td>
+                <td><?php echo $terminalc['kapasitas_penyimpanan'] ?></td>
+                <td>
+                    <a href="./crud/terminal/delterminal.php?id=<?= $terminalc['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/terminal/edterminal.php?id=<?= $terminalc['id_terminal'] ?>" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+        </table>
+        <?php endif; ?>
     </div>
 </body>
 
