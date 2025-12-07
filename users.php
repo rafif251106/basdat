@@ -9,9 +9,12 @@ $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $nama = $_POST['nama'] ?? "";
 if (isset($_POST['cari']) && !empty($nama)) {
-    $query = "SELECT * FROM `users` WHERE nama = '$nama'";
+    $query = "SELECT * FROM `users` WHERE nama like '%$nama%'";
     $result = mysqli_query($conn, $query);
-    $usersc = mysqli_fetch_assoc($result);
+    $usersc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $usersc[] = $row;
+    }
 }
 ?>
 
@@ -36,12 +39,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
     <div class="container">
         <h2>Users</h2>
         <form action="users.php" method="post">
-            <input type="search" name="nama" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama" autocomplete="off" list="nama">
-            <datalist id="nama">
-                <?php foreach ($users as $u): ?>
-                    <option value="<?php echo $u['nama']; ?>">
-                <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="nama" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama" list="users">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:users.php") ?>">Reset</button>
         </form>
@@ -79,17 +77,19 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <th>Level</th>
                 <th>Action</th>
             </tr>
+            <?php foreach ($usersc as $u): ?>
             <tr>
-                <td><?php echo $usersc['id'] ?></td>
-                <td><?php echo $usersc['username'] ?></td>
-                <td><?php echo $usersc['password'] ?></td>
-                <td><?php echo $usersc['nama'] ?></td>
-                <td><?php echo $usersc['level'] ?></td>
+                <td><?php echo $u['id'] ?></td>
+                <td><?php echo $u['username'] ?></td>
+                <td><?php echo $u['password'] ?></td>
+                <td><?php echo $u['nama'] ?></td>
+                <td><?php echo $u['level'] ?></td>
                 <td>
-                    <a href="./crud/users/delete.php?id=<?= $usersc['id'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/users/edit.php?id=<?= $usersc['id'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/users/delete.php?id=<?= $u['id'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/users/edit.php?id=<?= $u['id'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>

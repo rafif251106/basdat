@@ -9,9 +9,12 @@ $terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $nama = $_POST['nama_terminal'] ?? "";
 if (isset($_POST['cari']) && !empty($nama)) {
-    $query = "SELECT * FROM terminal WHERE nama_terminal = '$nama'";
+    $query = "SELECT * FROM terminal WHERE nama_terminal LIKE '%$nama%'";
     $result = mysqli_query($conn, $query);
-    $terminalc = mysqli_fetch_assoc($result);
+    $terminalc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $terminalc[] = $row;
+    }
 }
 ?>
 
@@ -36,12 +39,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
     <div class="container">
         <h2>Terminal</h2>
         <form action="terminal.php" method="post">
-            <input type="search" name="nama_terminal" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama terminal" autocomplete="off" list="terminal">
-            <datalist id="terminal">
-                <?php foreach ($terminal as $t): ?>
-                    <option value="<?php echo $t['nama_terminal']; ?>">
-                <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="nama_terminal" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama terminal" list="terminal">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:terminal.php") ?>">Reset</button>
         </form>
@@ -76,16 +74,18 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <th>Kapasitas_Penyimpanan</th>
                 <th>Action</th>
             </tr>
+            <?php foreach ($terminalc as $t): ?>
             <tr>
-                <td><?php echo $terminalc['id_terminal'] ?></td>
-                <td><?php echo $terminalc['nama_terminal'] ?></td>
-                <td><?php echo $terminalc['lokasi_terminal'] ?></td>
-                <td><?php echo $terminalc['kapasitas_penyimpanan'] ?></td>
+                <td><?php echo $t['id_terminal'] ?></td>
+                <td><?php echo $t['nama_terminal'] ?></td>
+                <td><?php echo $t['lokasi_terminal'] ?></td>
+                <td><?php echo $t['kapasitas_penyimpanan'] ?></td>
                 <td>
-                    <a href="./crud/terminal/delterminal.php?id=<?= $terminalc['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/terminal/edterminal.php?id=<?= $terminalc['id_terminal'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/terminal/delterminal.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/terminal/edterminal.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>

@@ -9,9 +9,12 @@ $sopir = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $nama = $_POST['nama_sopir'] ?? "";
 if (isset($_POST['cari']) && !empty($nama)) {
-    $query = "SELECT * FROM sopir WHERE nama_sopir = '$nama'";
+    $query = "SELECT * FROM sopir WHERE nama_sopir LIKE '%$nama%'";
     $result = mysqli_query($conn, $query);
-    $sopirc = mysqli_fetch_assoc($result);
+    $sopirc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $sopirc[] = $row;
+    }
 }
 
 ?>
@@ -37,12 +40,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
     <div class="container">
         <h2>Sopir</h2>
         <form action="sopir.php" method="post">
-            <input type="search" name="nama_sopir" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama sopir" autocomplete="off" list="sopir">
-            <datalist id="sopir">
-                <?php foreach ($sopir as $s): ?>
-                    <option value="<?php echo $s['nama_sopir']; ?>">
-                    <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="nama_sopir" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama sopir" list="sopir">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:sopir.php") ?>">Reset</button>
         </form>
@@ -77,16 +75,18 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <th>No Sim</th>
                 <th>Action</th>
             </tr>
-                <tr>
-                    <td><?php echo $sopirc['id_sopir'] ?></td>
-                    <td><?php echo $sopirc['nama_sopir'] ?></td>
-                    <td><?php echo $sopirc['no_hp'] ?></td>
-                    <td><?php echo $sopirc['no_sim'] ?></td>
-                    <td>
-                        <a href="./crud/sopir/delete.php?id=<?= $sopirc['id_sopir'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                        <a href="./crud/sopir/edit.php?id=<?= $sopirc['id_sopir'] ?>" class="btn btn-primary">Edit</a>
-                    </td>
-                </tr>
+            <?php foreach ($sopirc as $s): ?>
+            <tr>
+                <td><?php echo $s['id_sopir'] ?></td>
+                <td><?php echo $s['nama_sopir'] ?></td>
+                <td><?php echo $s['no_hp'] ?></td>
+                <td><?php echo $s['no_sim'] ?></td>
+                <td>
+                    <a href="./crud/sopir/delete.php?id=<?= $s['id_sopir'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/sopir/edit.php?id=<?= $s['id_sopir'] ?>" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>

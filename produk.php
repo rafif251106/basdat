@@ -9,9 +9,12 @@ $produk = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $nama = $_POST['nama_produk'] ?? "";
 if (isset($_POST['cari']) && !empty($nama)) {
-    $query = "SELECT * FROM produk_bbm WHERE nama_produk = '$nama'";
+    $query = "SELECT * FROM produk_bbm WHERE nama_produk LIKE '%$nama%'";
     $result = mysqli_query($conn, $query);
-    $produkc = mysqli_fetch_assoc($result);
+    $produkc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $produkc[] = $row;
+    }
 }
 ?>
 
@@ -36,12 +39,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
     <div class="container">
         <h2>Produk</h2>
         <form action="produk.php" method="post">
-            <input type="search" name="nama_produk" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama produk" autocomplete="off" list="produk">
-            <datalist id="produk">
-                <?php foreach ($produk as $p): ?>
-                    <option value="<?php echo $p['nama_produk']; ?>">
-                <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="nama_produk" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama produk" list="produk">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:produk.php") ?>">Reset</button>
         </form>
@@ -76,16 +74,18 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <th>Harga per Liter</th>
                 <th>Action</th>
             </tr>
+            <?php foreach ($produkc as $p): ?>
             <tr>
-                <td><?php echo $produkc['id_produk'] ?></td>
-                <td><?php echo $produkc['nama_produk'] ?></td>
-                <td><?php echo $produkc['jenis_bbm'] ?></td>
-                <td><?php echo $produkc['harga_per_liter'] ?></td>
+                <td><?php echo $p['id_produk'] ?></td>
+                <td><?php echo $p['nama_produk'] ?></td>
+                <td><?php echo $p['jenis_bbm'] ?></td>
+                <td><?php echo $p['harga_per_liter'] ?></td>
                 <td>
-                    <a href="./crud/produk/delete.php?id=<?= $produkc['id_produk'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/produk/edit.php?id=<?= $produkc['id_produk'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/produk/delete.php?id=<?= $p['id_produk'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/produk/edit.php?id=<?= $p['id_produk'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>
