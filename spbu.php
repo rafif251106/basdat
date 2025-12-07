@@ -9,9 +9,12 @@ $spbu = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $nama = $_POST['nama_spbu'] ?? "";
 if (isset($_POST['cari']) && !empty($nama)) {
-    $query = "SELECT * FROM spbu WHERE nama_spbu = '$nama'";
+    $query = "SELECT * FROM spbu WHERE nama_spbu LIKE '%$nama%'";
     $result = mysqli_query($conn, $query);
-    $spbuc = mysqli_fetch_assoc($result);
+    $spbuc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $spbuc[] = $row;
+    }
 }
 ?>
 
@@ -36,12 +39,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
     <div class="container">
         <h2>SPBU</h2>
         <form action="spbu.php" method="post">
-            <input type="search" name="nama_spbu" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama spbu" autocomplete="off" list="spbu">
-            <datalist id="spbu">
-                <?php foreach ($spbu as $s): ?>
-                    <option value="<?php echo $s['nama_spbu']; ?>">
-                <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="nama_spbu" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan nama spbu" list="spbu">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:spbu.php") ?>">Reset</button>
         </form>
@@ -76,16 +74,18 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <th>Kota</th>
                 <th>Action</th>
             </tr>
+            <?php foreach ($spbuc as $s): ?>
             <tr>
-                <td><?php echo $spbuc['id_spbu'] ?></td>
-                <td><?php echo $spbuc['nama_spbu'] ?></td>
-                <td><?php echo $spbuc['alamat'] ?></td>
-                <td><?php echo $spbuc['kota'] ?></td>
+                <td><?php echo $s['id_spbu'] ?></td>
+                <td><?php echo $s['nama_spbu'] ?></td>
+                <td><?php echo $s['alamat'] ?></td>
+                <td><?php echo $s['kota'] ?></td>
                 <td>
-                    <a href="./crud/spbu/delete.php?id=<?= $spbuc['id_spbu'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/spbu/edit.php?id=<?= $spbuc['id_spbu'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/spbu/delete.php?id=<?= $s['id_spbu'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/spbu/edit.php?id=<?= $s['id_spbu'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>

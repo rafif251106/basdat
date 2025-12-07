@@ -35,9 +35,12 @@ if (isset($_POST['filter']) && !empty($kapasitas_tangki)) {
 
 $plat_nomor = $_POST['plat_nomor'] ?? "";
 if (isset($_POST['cari']) && !empty($plat_nomor)) {
-    $query = "SELECT * FROM kendaraan WHERE plat_nomor = '$plat_nomor'";
+    $query = "SELECT * FROM kendaraan WHERE plat_nomor LIKE '%$plat_nomor%'";
     $result = mysqli_query($conn, $query);
-    $kendaraanc = mysqli_fetch_assoc($result);
+    $kendaraanc = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $kendaraanc[] = $row;
+    }
 }
 ?>
 
@@ -90,12 +93,7 @@ if (isset($_POST['cari']) && !empty($plat_nomor)) {
             </div>
         </form>
         <form action="kendaraan.php" method="post">
-            <input type="search" name="plat_nomor" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan plat nomor" autocomplete="off" list="plat_nomor">
-            <datalist id="plat_nomor">
-                <?php foreach ($kendaraan as $k): ?>
-                    <option value="<?php echo $k['plat_nomor']; ?>">
-                    <?php endforeach; ?>
-            </datalist>
+            <input type="search" name="plat_nomor" class="form-control" style="width: 250px; display: inline-block;" placeholder="Masukkan plat nomor" list="plat_nomor">
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:kendaraan.php") ?>">Reset</button>
         </form>
@@ -130,16 +128,18 @@ if (isset($_POST['cari']) && !empty($plat_nomor)) {
                 <th>Status Kendaraan</th>
                 <th>Action</th>
             </tr>
+            <?php foreach ($kendaraanc as $k): ?>
             <tr>
-                <td><?php echo $kendaraanc['id_kendaraan'] ?></td>
-                <td><?php echo $kendaraanc['plat_nomor'] ?></td>
-                <td><?php echo $kendaraanc['kapasitas_tangki'] ?></td>
-                <td><?php echo $kendaraanc['status_kendaraan'] ?></td>
+                <td><?php echo $k['id_kendaraan'] ?></td>
+                <td><?php echo $k['plat_nomor'] ?></td>
+                <td><?php echo $k['kapasitas_tangki'] ?></td>
+                <td><?php echo $k['status_kendaraan'] ?></td>
                 <td>
-                    <a href="./crud/kendaraan/delete.php?id=<?= $kendaraanc['id_kendaraan'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/kendaraan/edit.php?id=<?= $kendaraanc['id_kendaraan'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/kendaraan/delete.php?id=<?= $k['id_kendaraan'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/kendaraan/edit.php?id=<?= $k['id_kendaraan'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </table>
         <?php endif; ?>
     </div>
