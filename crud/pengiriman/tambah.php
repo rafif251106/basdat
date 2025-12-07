@@ -17,14 +17,24 @@ $query = "SELECT s.id_sopir,s.nama_sopir FROM sopir s";
 $result = mysqli_query($conn, $query);
 $sopir = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$query = "SELECT k.id_kendaraan,k.plat_nomor FROM kendaraan k";
+$query = "SELECT k.id_kendaraan,k.plat_nomor FROM kendaraan k WHERE k.status_kendaraan='aktif'";
 $result = mysqli_query($conn, $query);
 $kendaraan = mysqli_fetch_all($result, MYSQLI_ASSOC);
-// var_dump($kendaraan);
+
+date_default_timezone_set('Asia/Jakarta');
+$tanggal = $_POST['tanggal'] ?? "";
+if($tanggal > date('Y-m-d')){
+    $status = "terjadwal";
+
+}elseif($tanggal == date('Y-m-d')){
+    $status = "perjalanan";
+}else{
+    $status = "selesai";
+}
 
 if (isset($_POST['tambah'])) {
     $tanggal = $_POST['tanggal'] ?? "";
-    $status = $_POST['status'] ?? "";
+    // $status = $_POST['status'] ?? "";
     $terminal = $_POST['terminal'] ?? "";
     $spbu = $_POST['spbu'] ?? "";
     $sopir = $_POST['sopir'] ?? "";
@@ -69,18 +79,6 @@ if (isset($_POST['tambah'])) {
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal Kirim:</label>
                                 <input type="date" name="tanggal" class="form-control" style="width: 300px;">
-                            </div>
-                        </tr>
-                        <tr>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status Pengiriman:</label>
-                                <select class="form-select" aria-label="Default select example" name="status">
-                                    <option selected>Pilih status</option>
-                                    <option value="terjadwal">Terjadwal</option>
-                                    <option value="perjalanan">Dalam Perjalanan</option>
-                                    <option value="selesai">Selesai</option>
-                                    <option value="dibatalkan">Dibatalkan</option>
-                                </select>
                             </div>
                         </tr>
                         <tr>

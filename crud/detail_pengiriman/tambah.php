@@ -5,11 +5,44 @@ $conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
 $id = $_GET['id'];
 $query = "SELECT pb.id_produk,pb.nama_produk FROM produk_bbm pb WHERE pb.id_produk NOT IN (SELECT dp.id_produk FROM detail_pengiriman dp WHERE dp.id_pengiriman = '$id')";
 $result = mysqli_query($conn,$query);
-$produk = mysqli_fetch_all($result,MYSQLI_ASSOC);
+$produk_d = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
+$query = "SELECT dp.id_pengiriman,pr.nama_produk,dp.jumlah_liter_produk,k.kapasitas_tangki FROM detail_pengiriman dp JOIN pengiriman p ON p.id_pengiriman = dp.id_pengiriman JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan JOIN produk_bbm pr ON pr.id_produk = dp.id_produk WHERE dp.id_pengiriman = '$id' ORDER BY dp.id_pengiriman;";
+$result = mysqli_query($conn,$query);
+$detail_p = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+
+$produk = $_POST['produk'] ?? "";
+$jumlah = $_POST['jumlah'] ?? "";
+$kapasitas_tangki = $detail_p[0]['kapasitas_tangki'] ?? 0;
+if ($kapasitas_tangki > 0) {
+    $total_liter = 0;
+    foreach ($detail_p as $dp) {
+        $total_liter += $dp['jumlah_liter_produk'];
+    }
+    $sisa = $kapasitas_tangki - $total_liter;
+    if ((int)$jumlah + $total_liter > $kapasitas_tangki) {
+        echo "
+        <script>
+            alert('Jumlah liter melebihi kapasitas tangki kendaraan. Sisa kapasitas: $sisa liter.');
+            window.location.href='./tambah.php?id=$id';
+        </script>
+        ";
+        exit;
+    }
+    if ($total_liter >= $kapasitas_tangki) {
+        echo "
+        <script>
+            alert('Kapasitas tangki kendaraan sudah penuh. Tidak dapat menambahkan detail pengiriman lagi.');
+            window.location.href='../../detail_pengiriman.php?id=$id';
+        </script>
+        ";
+        exit;
+    }
+}
+$produk = $_POST['produk'] ?? "";
+$jumlah = $_POST['jumlah'] ?? "";
 if (isset($_POST['tambah'])) {
-    $produk = $_POST['produk'] ?? "";
-    $jumlah = $_POST['jumlah'] ?? "";
     $query = "INSERT INTO detail_pengiriman(id_pengiriman,id_produk,jumlah_liter_produk) VALUES 
     (?,?,?)";
     $prepare = mysqli_prepare($conn,$query);
@@ -63,7 +96,7 @@ if (isset($_POST['batal'])) {
                                 <label for="produk" class="form-label">Produk:</label>
                                 <select class="form-select" aria-label="Default select example" name="produk">
                                     <option selected>Pilih Produk</option>
-                                    <?php foreach ($produk as $p): ?>
+                                    <?php foreach ($produk_d as $p): ?>
                                         <option value="<?= $p['id_produk'] ?>"><?php echo $p['nama_produk'] ?></option>
                                     <?php endforeach ?>
                                 </select>

@@ -2,8 +2,12 @@
 include_once "./auth.php";
 
 $conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$baris = 100;
+if (isset($_POST['tampil'])) {
+    $baris = $_POST['baris'] ?? 100;
+}
 $query = "SELECT p.id_pengiriman,p.tanggal_kirim,p.status_pengiriman, t.nama_terminal,sp.nama_spbu,s.nama_sopir,k.plat_nomor
-FROM pengiriman p JOIN terminal t ON t.id_terminal = p.id_terminal JOIN spbu sp ON sp.id_spbu = p.id_spbu JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan JOIN sopir s ON s.id_sopir = p.id_sopir";
+FROM pengiriman p JOIN terminal t ON t.id_terminal = p.id_terminal JOIN spbu sp ON sp.id_spbu = p.id_spbu JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan JOIN sopir s ON s.id_sopir = p.id_sopir ORDER BY p.id_pengiriman LIMIT $baris";
 $result = mysqli_query($conn, $query);
 $pengiriman = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
@@ -22,6 +26,17 @@ $pengiriman = mysqli_fetch_all($result, MYSQLI_ASSOC);
     ?>
     <div class="container">
         <h2>Pengiriman</h2>
+        <form action="pengiriman.php" method="post" class="w-50">
+        <div class="class= d-flex align-items-end gap-3">
+                <select name="baris" class="form-select" aria-label="Default select example" style="width: 110px;">
+                    <option value="10" <?= $baris == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="25" <?= $baris == 25 ? 'selected' : '' ?>>25</option>
+                    <option value="50" <?= $baris == 50 ? 'selected' : '' ?>>50</option>
+                    <option value="100" <?= $baris == 100 ? 'selected' : '' ?>>100</option>
+                </select>
+                <button type="submit" name="tampil" class="btn btn-primary">Tampilkan</button>
+            </form>
+        </div>
         <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
             <tr class="table-dark">
                 <th>ID Pengiriman</th>

@@ -99,13 +99,7 @@ if (isset($_POST['kembali'])) {
                         <div class="mb-3">
                             <label for="status" class="form-label">Status Pengiriman:</label>
                             <select class="form-select" aria-label="Default select example" name="status" disabled>
-                                <?php if ($status == "dalam perjalanan"): ?>
-                                    <option value="<?= $status ?>"><?php echo ucwords($status) ?></option>
-                                    <option value="tiba">Tiba</option>
-                                <?php elseif ($status == "tiba"): ?>
-                                    <option value="<?= $status ?>"><?php echo ucwords($status) ?></option>
-                                    <option value="dalam perjalanan">Dalam Perjalanan</option>
-                                <?php endif ?>
+                                <option value="<?= $status ?>"><?php echo ucwords($status) ?></option>
                             </select>
                         </div>
                     </td>
