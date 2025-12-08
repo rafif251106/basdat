@@ -89,7 +89,7 @@ if (isset($_POST['excel'])) {
 
 
 if (isset($_POST['kembali'])) {
-    header("location:./homepage.php");
+    header("location:./index.php");
 }
 
 ?>
