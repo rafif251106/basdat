@@ -44,7 +44,7 @@ if (isset($_POST['cari']) && !empty($nama)) {
             <button type="submit" name="cari" class="btn btn-primary mb-2">Search</button>
             <button type="submit" name="reset" class="btn btn-danger mb-2" onclick="<?= header("location:terminal.php") ?>">Reset</button>
         </form>
-        <a href="./crud/terminal/tdterminal.php" class="btn btn-primary">Tambah Data</a>
+        <a href="./crud/terminal/tambah.php" class="btn btn-primary">Tambah Data</a>
         <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary terminal">
             <tr class="table-dark">
                 <th>ID Terminal</th>
@@ -60,8 +60,8 @@ if (isset($_POST['cari']) && !empty($nama)) {
                     <td><?php echo $t['lokasi_terminal'] ?></td>
                     <td><?php echo $t['kapasitas_penyimpanan'] ?></td>
                     <td>
-                        <a href="./crud/terminal/delterminal.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                        <a href="./crud/terminal/edterminal.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
+                        <a href="./crud/terminal/delete.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                        <a href="./crud/terminal/edit.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
                     </td>
                 </tr>
             <?php endforeach ?>
@@ -82,8 +82,8 @@ if (isset($_POST['cari']) && !empty($nama)) {
                 <td><?php echo $t['lokasi_terminal'] ?></td>
                 <td><?php echo $t['kapasitas_penyimpanan'] ?></td>
                 <td>
-                    <a href="./crud/terminal/delterminal.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
-                    <a href="./crud/terminal/edterminal.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="./crud/terminal/delete.php?id=<?= $t['id_terminal'] ?>" onclick="return confirm('Apakah anda yakin menghapus data ini?')" class=" btn btn-danger">Delete</a>
+                    <a href="./crud/terminal/edit.php?id=<?= $t['id_terminal'] ?>" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
             <?php endforeach; ?>
