@@ -1,6 +1,7 @@
 <?php
 include_once "./auth.php";
 include_once "./config.php";
+checkLogin();
 
 $conn = connection();
 $baris = 100;
@@ -28,7 +29,7 @@ $pengiriman = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <div class="container">
         <h2>Pengiriman</h2>
         <form action="pengiriman.php" method="post" class="w-50">
-        <div class="class= d-flex align-items-end gap-3">
+            <div class="d-flex align-items-end gap-3">
                 <select name="baris" class="form-select" aria-label="Default select example" style="width: 110px;">
                     <option value="10" <?= $baris == 10 ? 'selected' : '' ?>>10</option>
                     <option value="25" <?= $baris == 25 ? 'selected' : '' ?>>25</option>
@@ -36,8 +37,8 @@ $pengiriman = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     <option value="100" <?= $baris == 100 ? 'selected' : '' ?>>100</option>
                 </select>
                 <button type="submit" name="tampil" class="btn btn-primary">Tampilkan</button>
-            </form>
-        </div>
+            </div>
+        </form>
         <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
             <tr class="table-dark">
                 <th>ID Pengiriman</th>

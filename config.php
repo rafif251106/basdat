@@ -1,4 +1,5 @@
 <?php
+
 function connection()
 {
     $conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");

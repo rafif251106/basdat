@@ -1,9 +1,6 @@
 <?php
 include_once "./auth.php";
-
-
-
-
+checkLogin();
 ?>
 
 <!DOCTYPE html>

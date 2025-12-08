@@ -1,9 +1,8 @@
 <?php
+include_once "./auth.php";
 include_once "./config.php";
-session_start();
-if (isset($_SESSION['id'])) {
-    header("location:login.php");
-}
+checkAlreadyLogin();
+
 $conn = connection();
 
 function validateusername(&$error, $field)
