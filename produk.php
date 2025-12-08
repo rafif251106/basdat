@@ -1,8 +1,9 @@
 <?php
 include_once "./auth.php";
 include_once "./authadmin.php";
+include_once "./config.php";
 
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$conn = connection();
 $query = "SELECT * FROM produk_bbm";
 $result = mysqli_query($conn, $query);
 $produk = mysqli_fetch_all($result, MYSQLI_ASSOC);

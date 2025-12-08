@@ -1,7 +1,8 @@
 <?php
 include_once "./auth.php";
+include_once "./config.php";
 
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$conn = connection();
 $baris = 100;
 if (isset($_POST['tampil'])) {
     $baris = $_POST['baris'] ?? 100;

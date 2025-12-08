@@ -1,20 +1,25 @@
 <?php
 include_once "../../auth.php";
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "../../config.php";
+$conn = connection();
 
 $id = $_GET['id'];
 $query = "SELECT pb.id_produk,pb.nama_produk FROM produk_bbm pb WHERE pb.id_produk NOT IN (SELECT dp.id_produk FROM detail_pengiriman dp WHERE dp.id_pengiriman = '$id')";
 $result = mysqli_query($conn,$query);
 $produk_d = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-$query = "SELECT dp.id_pengiriman,pr.nama_produk,dp.jumlah_liter_produk,k.kapasitas_tangki FROM detail_pengiriman dp JOIN pengiriman p ON p.id_pengiriman = dp.id_pengiriman JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan JOIN produk_bbm pr ON pr.id_produk = dp.id_produk WHERE dp.id_pengiriman = '$id' ORDER BY dp.id_pengiriman;";
+$query = "SELECT dp.id_pengiriman,pr.nama_produk,dp.jumlah_liter_produk FROM detail_pengiriman dp JOIN pengiriman p ON p.id_pengiriman = dp.id_pengiriman JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan JOIN produk_bbm pr ON pr.id_produk = dp.id_produk WHERE dp.id_pengiriman = '$id' ORDER BY dp.id_pengiriman;";
 $result = mysqli_query($conn,$query);
 $detail_p = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
+$query_k = "SELECT k.* FROM pengiriman p JOIN kendaraan k ON k.id_kendaraan = p.id_kendaraan WHERE p.id_pengiriman = '$id'";
+$result_k = mysqli_query($conn,$query_k);
+$kselect = mysqli_fetch_assoc($result_k);
 
 $produk = $_POST['produk'] ?? "";
 $jumlah = $_POST['jumlah'] ?? "";
-$kapasitas_tangki = $detail_p[0]['kapasitas_tangki'] ?? 0;
+$kapasitas_tangki = $kselect['kapasitas_tangki'] ?? 0;
+$sisa = $kapasitas_tangki;
 if ($kapasitas_tangki > 0) {
     $total_liter = 0;
     foreach ($detail_p as $dp) {
@@ -40,6 +45,7 @@ if ($kapasitas_tangki > 0) {
         exit;
     }
 }
+
 $produk = $_POST['produk'] ?? "";
 $jumlah = $_POST['jumlah'] ?? "";
 if (isset($_POST['tambah'])) {

@@ -1,5 +1,6 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "../../config.php";
+$conn = connection();
 if (isset($_GET['id'])) {
     $id = $_GET['id'] ?? "";
     $query = "DELETE FROM users WHERE id = '$id'";

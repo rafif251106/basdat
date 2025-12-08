@@ -1,6 +1,8 @@
 <?php
 include_once "./auth.php";
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "./config.php";
+
+$conn = connection();
 
 function validatetanggal(&$error, $tanggalaw, $tanggalak)
 {
@@ -205,7 +207,7 @@ if (isset($_POST['kembali'])) {
             <div class="card">
                 <div class="card-body">
                     <div class="no_print">
-                        <form action="laporan.php" method="post">
+                        <form action="lprterminal.php" method="post">
                             <input type="hidden" name="tanggalaw" value="<?= $tanggalaw ?>">
                             <input type="hidden" name="tanggalak" value="<?= $tanggalak ?>">
                             <input type="hidden" name="terminal" value="<?= $idterminal ?>">
@@ -247,7 +249,7 @@ if (isset($_POST['kembali'])) {
                     <hr>
                     <div class="container">
                         <?php if (!empty($_POST['terminal'])): ?>
-                            <h2><?php echo $data[0]['nama_terminal'] ?></h2>
+                            <h2 style="color: black;"><?php echo $data[0]['nama_terminal'] ?></h2>
                         <?php endif; ?>
                         <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
                             <tr class="table-dark">

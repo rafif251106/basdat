@@ -1,8 +1,9 @@
 <?php
 include_once "./auth.php";
 include_once "./authadmin.php";
+include_once "./config.php";
 
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$conn = connection();
 $query = "SELECT * FROM sopir";
 $result = mysqli_query($conn, $query);
 $sopir = mysqli_fetch_all($result, MYSQLI_ASSOC);

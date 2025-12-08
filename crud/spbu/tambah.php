@@ -1,8 +1,9 @@
 <?php
 include_once "../../auth.php";
 include_once "../../authadmin.php";
+include_once "../../config.php";
 
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$conn = connection();
 if (isset($_POST['batal'])) {
     header("location:../../spbu.php");
 }

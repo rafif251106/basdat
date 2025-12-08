@@ -1,6 +1,8 @@
 <?php
 include_once "./auth.php";
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "./config.php";
+
+$conn = connection();
 
 $result_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM pengiriman");
 $total_pengiriman = mysqli_fetch_assoc($result_total)['total'];

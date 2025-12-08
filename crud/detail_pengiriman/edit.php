@@ -1,6 +1,7 @@
 <?php
 include_once "../../auth.php";
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "../../config.php";
+$conn = connection();
 
 $id_pengiriman = $_GET['id_pengiriman'];
 $id_produk = $_GET['id_produk'];

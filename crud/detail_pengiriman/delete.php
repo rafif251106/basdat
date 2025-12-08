@@ -1,5 +1,7 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "../../config.php";
+
+$conn = connection();
 if (isset($_GET['id_pengiriman']) && isset($_GET['id_produk'])) {
     $id_pengiriman = $_GET['id_pengiriman'] ?? "";
     $id_produk = $_GET['id_produk'] ?? "";

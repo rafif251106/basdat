@@ -1,6 +1,7 @@
 <?php
 include_once "./auth.php";
 include_once "./config.php";
+$conn = connection();
 
 $id = $_GET['id'];
 $query = "SELECT * FROM pengiriman WHERE id_pengiriman = '$id'";
@@ -15,40 +16,35 @@ $query = "SELECT t.id_terminal,t.nama_terminal FROM terminal t WHERE id_terminal
 $result = mysqli_query($conn, $query);
 $tselect = mysqli_fetch_assoc($result);
 
-$query = "SELECT t.id_terminal,t.nama_terminal FROM terminal t WHERE id_terminal != '$idt'";
-$result = mysqli_query($conn, $query);
-$terminal = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 $ids = $data['id_spbu'];
 $query = "SELECT s.id_spbu,s.nama_spbu FROM spbu s WHERE id_spbu = '$ids'";
 $result = mysqli_query($conn, $query);
 $sselect = mysqli_fetch_assoc($result);
-
-$query = "SELECT s.id_spbu,s.nama_spbu FROM spbu s WHERE id_spbu != '$ids'";
-$result = mysqli_query($conn, $query);
-$spbu = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $idso = $data['id_sopir'];
 $query = "SELECT s.id_sopir,s.nama_sopir FROM sopir s WHERE id_sopir = '$idso'";
 $result = mysqli_query($conn, $query);
 $soselect = mysqli_fetch_assoc($result);
 
-$query = "SELECT s.id_sopir,s.nama_sopir FROM sopir s WHERE id_sopir != '$idso'";
-$result = mysqli_query($conn, $query);
-$sopir = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 $idk = $data['id_kendaraan'];
 $query = "SELECT k.id_kendaraan,k.plat_nomor,k.kapasitas_tangki FROM kendaraan k WHERE id_kendaraan = '$idk'";
 $result = mysqli_query($conn, $query);
 $kselect = mysqli_fetch_assoc($result);
 
-$query = "SELECT k.id_kendaraan,k.plat_nomor FROM kendaraan k WHERE id_kendaraan != '$idk'";
-$result = mysqli_query($conn, $query);
-$kendaraan = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 $query = "SELECT dp.id_pengiriman,dp.id_produk,pb.nama_produk,dp.jumlah_liter_produk FROM detail_pengiriman dp join pengiriman p ON p.id_pengiriman = dp.id_pengiriman JOIN produk_bbm pb ON pb.id_produk = dp.id_produk WHERE dp.id_pengiriman = '$id'";
 $result = mysqli_query($conn, $query);
 $detail_p = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$kapasitas_tangki = $kselect['kapasitas_tangki'] ?? 0;
+if ($kapasitas_tangki > 0) {
+    $total_liter = 0;
+    foreach ($detail_p as $dp) {
+        $total_liter += $dp['jumlah_liter_produk'];
+    }
+    $sisa = $kapasitas_tangki - $total_liter;
+}
+
+$progress_percentage = ($kapasitas_tangki > 0) ? ($total_liter / $kapasitas_tangki) * 100 : 0;
 
 if (isset($_POST['kembali'])) {
     header("location:./pengiriman.php");
@@ -72,7 +68,7 @@ if (isset($_POST['kembali'])) {
 <body>
     <?php require_once "./include/navbar.php" ?>
     <div class="container">
-        <h2 style="text-align: center;">Tambah Data Pengiriman</h2>
+        <h2 style="text-align: center;">Detail Pengiriman</h2>
     </div>
     <form action="./detail_pengiriman.php" method="post">
         <button type="submit" name="kembali" class="btn btn-danger ms-5">Kembali</button>
@@ -110,9 +106,6 @@ if (isset($_POST['kembali'])) {
                             <label for="terminal" class="form-label">Terminal:</label>
                             <select class="form-select" aria-label="Default select example" name="terminal" disabled>
                                 <option value="<?= $tselect['id_terminal'] ?>"><?php echo $tselect['nama_terminal'] ?></option>
-                                <?php foreach ($terminal as $t): ?>
-                                    <option value="<?= $t['id_terminal'] ?>"><?php echo $t['nama_terminal'] ?></option>
-                                <?php endforeach; ?>
                             </select>
                         </div>
                     </td>
@@ -123,9 +116,6 @@ if (isset($_POST['kembali'])) {
                             <label for="spbu" class="form-label">SPBU:</label>
                             <select class="form-select" aria-label="Default select example" name="spbu" disabled>
                                 <option value="<?= $sselect['id_spbu'] ?>"><?php echo $sselect['nama_spbu'] ?></option>
-                                <?php foreach ($spbu as $s): ?>
-                                    <option value="<?= $s['id_spbu'] ?>"><?php echo $s['nama_spbu'] ?></option>
-                                <?php endforeach; ?>
                             </select>
                         </div>
                     </td>
@@ -134,9 +124,6 @@ if (isset($_POST['kembali'])) {
                             <label for="sopir" class="form-label">Sopir:</label>
                             <select class="form-select" aria-label="Default select example" name="sopir" disabled>
                                 <option value="<?= $soselect['id_sopir'] ?>"><?php echo $soselect['nama_sopir'] ?></option>
-                                <?php foreach ($sopir as $s): ?>
-                                    <option value="<?= $s['id_sopir'] ?>"><?php echo $s['nama_sopir'] ?></option>
-                                <?php endforeach; ?>
                             </select>
                         </div>
                     </td>
@@ -146,11 +133,11 @@ if (isset($_POST['kembali'])) {
                         <div class="mb-3">
                             <label for="kendaraan" class="form-label">Kendaraan:</label><br>
                             <small class="text-info">Kapasitas Tangki: <?= $kselect['kapasitas_tangki'] ?> L</small><br>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $progress_percentage ?>%;" aria-valuenow="<?= $total_liter ?>" aria-valuemin="0" aria-valuemax="<?= $kapasitas_tangki ?>"><?= $total_liter ?> L</div>
+                            </div>
                             <select class="form-select" aria-label="Default select example" name="kendaraan" disabled>
                                 <option value="<?= $kselect['id_kendaraan'] ?>"><?php echo $kselect['plat_nomor'] ?></option>
-                                <?php foreach ($kendaraan as $k): ?>
-                                    <option value="<?= $k['id_kendaraan'] ?>"><?php echo $k['plat_nomor'] ?></option>
-                                <?php endforeach; ?>
                             </select>
                         </div>
                     </td>
@@ -161,7 +148,9 @@ if (isset($_POST['kembali'])) {
 
     <div class="container">
         <h2>Pengiriman</h2>
-        <a href="./crud/detail_pengiriman/tambah.php?id=<?= $id ?>" class="btn btn-primary mb-4">Tambah Data</a>
+        <?php if($status == 'terjadwal'): ?>
+            <a href="./crud/detail_pengiriman/tambah.php?id=<?= $id ?>" class="btn btn-primary mb-4">Tambah Data</a>
+        <?php endif ?>
         <table border="1" cellpadding="15px" class="table table-light table-hover table-bordered border-primary">
             <tr class="table-dark">
                 <th>ID Pengiriman</th>

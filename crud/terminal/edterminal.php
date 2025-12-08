@@ -1,8 +1,9 @@
 <?php
 include_once "../../auth.php";
 include_once "../../authadmin.php";
+include_once "../../config.php";
 
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+$conn = connection();
 $id = $_GET['id'] ?? "";
 if (isset($_GET['id'])) {
     $query = "SELECT * FROM terminal WHERE id_terminal = $id";
