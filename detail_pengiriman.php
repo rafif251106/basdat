@@ -1,6 +1,6 @@
 <?php
 include_once "./auth.php";
-$conn = mysqli_connect("localhost", "root", "", "distribusi_bbm");
+include_once "./config.php";
 
 $id = $_GET['id'];
 $query = "SELECT * FROM pengiriman WHERE id_pengiriman = '$id'";
