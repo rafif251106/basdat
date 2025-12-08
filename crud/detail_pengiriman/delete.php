@@ -1,5 +1,7 @@
 <?php
+include_once "../../auth.php";
 include_once "../../config.php";
+checkLogin();
 
 $conn = connection();
 if (isset($_GET['id_pengiriman']) && isset($_GET['id_produk'])) {

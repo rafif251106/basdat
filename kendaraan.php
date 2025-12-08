@@ -1,7 +1,8 @@
 <?php
 include_once "./auth.php";
-include_once "./authadmin.php";
 include_once "./config.php";
+checkLogin();
+checkAdmin();
 
 $conn = connection();
 $query = "SELECT * FROM kendaraan";

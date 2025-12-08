@@ -1,6 +1,8 @@
 <?php
 include_once "../../auth.php";
 include_once "../../config.php";
+checkLogin();
+
 $conn = connection();
 
 $id = $_GET['id'];
