@@ -104,7 +104,8 @@ if (isset($_POST['batal'])) {
                         </tr>
                         <tr>
                             <div class="mb-3">
-                                <label for="jumlah" class="form-label">Jumlah Liter Produk:</label>
+                                <label for="jumlah" class="form-label">Jumlah Liter Produk:</label><br>
+                                <small class="text-danger">Sisa kapasitas tangki : <?= $sisa ?> L</small>
                                 <input type="number" name="jumlah" class="form-control" style="width: 300px;" value = 0>
                             </div>
                         </tr>

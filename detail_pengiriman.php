@@ -38,7 +38,7 @@ $result = mysqli_query($conn, $query);
 $sopir = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $idk = $data['id_kendaraan'];
-$query = "SELECT k.id_kendaraan,k.plat_nomor FROM kendaraan k WHERE id_kendaraan = '$idk'";
+$query = "SELECT k.id_kendaraan,k.plat_nomor,k.kapasitas_tangki FROM kendaraan k WHERE id_kendaraan = '$idk'";
 $result = mysqli_query($conn, $query);
 $kselect = mysqli_fetch_assoc($result);
 
@@ -144,7 +144,8 @@ if (isset($_POST['kembali'])) {
                 <tr>
                     <td colspan="2">
                         <div class="mb-3">
-                            <label for="kendaraan" class="form-label">Kendaraan:</label>
+                            <label for="kendaraan" class="form-label">Kendaraan:</label><br>
+                            <small class="text-info">Kapasitas Tangki: <?= $kselect['kapasitas_tangki'] ?> L</small><br>
                             <select class="form-select" aria-label="Default select example" name="kendaraan" disabled>
                                 <option value="<?= $kselect['id_kendaraan'] ?>"><?php echo $kselect['plat_nomor'] ?></option>
                                 <?php foreach ($kendaraan as $k): ?>
